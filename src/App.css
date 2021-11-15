@@ -1,38 +1,42 @@
-.App {
+.formBody{
   text-align: center;
+  background-color: #1d232e;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.formContainer{
+  border-radius: 8px;
+  border-color: black;
+  background-color: rgb(241, 241, 241);
+  color: black;
+  margin: 10px;
+  display: inline-block;
+  flex: auto;
+  width: 75%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.divHeader{
+  text-align: center;
+  font-size: 30;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.inputContainer{
+  padding-right: 10%;
+  padding-left: 10%;
+  padding-bottom: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+.rowForm{
+  padding-bottom: 2rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.phoneNumber{
+  width: 48.5%;
+  float: left;
+  height: 3.5rem;
+  border-width: 1px;
+  border-color: #1d232e44;
+}
+
+.services{
+  text-align: left;
 }
