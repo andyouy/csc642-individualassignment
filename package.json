@@ -2,6 +2,7 @@
   "name": "csc642-individualassignment",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://andyouy.github.io/csc642-individualassignment",
   "dependencies": {
     "@mui/material": "^5.1.0",
     "@testing-library/jest-dom": "^5.15.0",
