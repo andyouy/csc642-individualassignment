@@ -8,8 +8,7 @@ function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route exact path="/" element={<Survey/>}/>
-        <Route path="/survey" element={<Survey/>}/>
+        <Route path="/" element={<Survey/>}/>
         <Route path="/result" element={<Result/>}/>
       </Routes>
     </Router>

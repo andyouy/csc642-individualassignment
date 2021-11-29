@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {Form, Row, Col, Button, Container, FloatingLabel} from "react-bootstrap"
+import React, { useState} from "react";
+import {  useNavigate } from "react-router-dom";
+import {Form, Row, Col, Container, FloatingLabel} from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PhoneInput, {format} from "react-phone-input-auto-format";
@@ -13,7 +14,7 @@ function Survey() {
     const [firstName, setFirstName] = useState("");
     const [preferredTitle, setPreferredTitle] = useState("");
     const [heightFeet, setHeightFeet] = useState("");
-    const [heightINches, setHeightInches] = useState("");
+    const [heightInches, setHeightInches] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [state, setState] = useState("");
@@ -26,19 +27,192 @@ function Survey() {
     const [checkedVisit, setCheckedVisit] = useState("");
     const [budget, setBudget] = useState("");
     const [email, setEmail] = useState("");
+    const [captcha, setCaptcha] = useState("");
+    const [tos, setTos] = useState("");
 
-    const phoneNumberHandler = (event) => {
-        setPhone(format(event));
+
+    const [lastNameError, setLastNameError] = useState("");
+    const [firstNameError, setFirstNameError] = useState("");
+    const [titleError, setTitleError] = useState("");
+    const [addressError, setAddressError] = useState("");
+    const [stateError, setStateError] = useState("");
+    const [zipCodeError, setZipCodeError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [tosError, setTosError] = useState("");
+    const [captchaError, setCaptchaError] = useState("");
+
+    let lnError = false;
+    let fnError = false;
+    let tError = false;
+    let adrError = false;
+    let stError = false;
+    let zipError = false;
+    let emError = false;
+    let toError = false;
+    let capError = false;
+
+
+
+    let history = useNavigate();
+
+
+    const store = () => {
+        sessionStorage.setItem("lastName", JSON.stringify(lastName));
+        sessionStorage.setItem("firstName", JSON.stringify(firstName));
+        sessionStorage.setItem("preferredTitle", JSON.stringify(preferredTitle));
+        sessionStorage.setItem("heightFeet", JSON.stringify(heightFeet));
+        sessionStorage.setItem("heightInches", JSON.stringify(heightInches));
+        sessionStorage.setItem("phone", JSON.stringify(phone));
+        sessionStorage.setItem("address", JSON.stringify(address));
+        sessionStorage.setItem("state", JSON.stringify(state));
+        sessionStorage.setItem("zipCode", JSON.stringify(zipCode));
+        sessionStorage.setItem("budget", JSON.stringify(budget));
+        sessionStorage.setItem("email", JSON.stringify(email));
+        
+        var checkedArray = [];
+        if(checkedEmail){
+            checkedArray.push(checkedEmail);
+        }
+
+        if(checkedPhone){
+            checkedArray.push(checkedPhone)
+        }
+
+        if(checkedFacebook){
+            checkedArray.push(checkedFacebook);
+        }
+
+        if(checkedTwitter){
+            checkedArray.push(checkedTwitter);
+        }
+
+        if(checkedMail){
+            checkedArray.push(checkedMail)
+        }
+
+        if(checkedVisit){
+            checkedArray.push(checkedVisit)
+        }
+
+        console.log(checkedArray);
+
+        sessionStorage.setItem("checkedItems", JSON.stringify(checkedArray))
+
+        //once all values are stored, switches to result page
+        history('/result')
+
+        
     }
 
-    const temp = (e) => {
+
+    const emailRegex = new RegExp("^[^@]+@[^@]+.[^@]+$");
+
+    let verified = false;
+    //checks each input field on submit
+    const verification = (e) => {
+        if(lastName.length > 40){
+            setLastNameError("Last name must be less than 40 characters");
+            lnError = true;
+        }else if(lastName.length === 0){
+            setLastNameError("Last name can not be left empty");
+            lnError = true;
+        }else{
+            setLastNameError("");
+            lnError = false;
+        }
+
+        if(firstName.length > 40){
+            setFirstNameError("First name must be less than 40 characters");
+            fnError = true;
+        }else if (firstName.length === 0){
+            setFirstNameError("First name can not be left empty")
+            fnError = true;
+        }else{
+            setFirstNameError("");
+            fnError = false;
+        }
+
+        if(preferredTitle === "Please select a title" || preferredTitle === ""){
+            setTitleError("Please select a title");
+            tError = true;
+        }else{
+            setTitleError("");
+            tError = false;
+        }
+
+        if(address.length > 40){
+            setAddressError("Please enter an address less than 40 characters");
+            adrError = true;
+        }else if(address === ""){
+            setAddressError("Please enter an address");
+            adrError = true;
+        }else{
+            setAddressError("");
+            adrError = false;
+        }
+
+        if(state === "---" || state === ""){
+            setStateError("Please select a state");
+            stError = true;
+        }else{
+            setStateError("");
+            stError = false;
+        }
+
+        if(zipCode.length > 5 || zipCode.length <= 0){
+            setZipCodeError("Please enter a valid zip code");
+            zipError = true;
+        }else{
+            setZipCodeError("");
+            zipError = false;
+        }
+
+        if(!emailRegex.test(email)){
+            setEmailError("Please enter a valid email");
+            emError = true;
+        }else{
+            setEmailError("");
+            emError = false;
+        }
+
+        if(tos === ""){
+            setTosError("Please agree with the Terms of Service")
+            toError = true;
+        }else{
+            setTosError("");
+            toError = false;
+        }
+
+        if(captcha === ""){
+            setCaptchaError("Please verify that you are human");
+            capError = true;
+        }else{
+            setCaptchaError("")
+            capError = false;
+        }
+
+        if( !lnError && 
+            !fnError  &&
+            !tError &&
+            !adrError &&
+            !stError &&
+            !zipError &&
+            !emError &&
+            !toError &&
+            !capError){
+            verified = true;
+        }
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(checkedEmail)
-        console.log(checkedPhone)
-        console.log(checkedFacebook)
-        console.log(checkedTwitter)
-        console.log(checkedMail)
-        console.log(checkedVisit)
+        verification();
+        console.log(verified)
+
+
+        if(verified){
+            store();
+        }
     }
 
 
@@ -50,7 +224,7 @@ function Survey() {
                 <Container fluid="md" className="inputContainer">
                     <Form>
                         <Row className="rowForm">
-                        <p>Personal Information </p>
+                        <p className="category-label">Personal Information </p>
                             <Col>
                                 <Form.Floating>
                                     <Form.Control 
@@ -61,6 +235,7 @@ function Survey() {
                                     />
                                     <label htmlFor="floatingLastName">Last Name*</label>
                                 </Form.Floating>
+                                {lastNameError ? <p className="error">{lastNameError}</p> : null}
                             </Col>
                             <Col>
                                 <Form.Floating>
@@ -72,6 +247,7 @@ function Survey() {
                                     />
                                     <label htmlFor="floatingFirstName">First Name*</label>
                                 </Form.Floating>
+                                {firstNameError ? <p className="error">{firstNameError}</p> : null}
                             </Col>
                             <Col>
                             <FloatingLabel label="Select a title">
@@ -83,6 +259,7 @@ function Survey() {
                                     <option>Staff</option>
                                     <option>Retired</option>
                                 </Form.Select>
+                                {titleError ? <p className="error">{titleError}</p> : null}
                             </FloatingLabel>
                             </Col>
                         </Row>
@@ -125,9 +302,8 @@ function Survey() {
                             <Col>
                                 <PhoneInput 
                                     placeholder="Phone Number"
-                                    value={phone}
-                                    onChange={phoneNumberHandler}
                                     className="phoneNumber"
+                                    onChange={e => setPhone(format(e))}
                                 />
                             </Col>
                         </Row>
@@ -142,6 +318,7 @@ function Survey() {
                                     />
                                     <label htmlFor="floatingAddress">Address*</label>
                                 </Form.Floating>
+                                {addressError ? <p className="error">{addressError}</p> : null}
                             </Col>
                             <Col>
                             <FloatingLabel label="State*">
@@ -199,23 +376,25 @@ function Survey() {
                                     <option>Wyoming</option>
                                 </Form.Select>
                             </FloatingLabel>
+                            {stateError ? <p className="error">{stateError}</p> : null}
                             </Col>
                             <Col>
                                 <Form.Floating>
                                     <Form.Control 
                                     type="text" 
-                                    value={address}
+                                    value={zipCode}
                                     placeholder="Address*"
-                                    onChange={e => setAddress(e.target.value)}
+                                    onChange={e => setZipCode(e.target.value)}
                                     />
                                     <label htmlFor="floatingZipCode">Zip Code* (11111)</label>
                                 </Form.Floating>
+                                {zipCodeError ? <p className="error">{zipCodeError}</p> : null}
                             </Col>
                         </Row>
                         <hr/>
                         <Row className="rowForm">
                             <Col>
-                            <p className="services">Select all services you require</p>
+                            <p className="services-label">Select all services you require</p>
                             <Form.Check
                                 className="services"
                                 label="Email"
@@ -260,7 +439,7 @@ function Survey() {
                             />
                             </Col>
                             <Col>
-                                <p>Please select a budget</p>
+                                <p className="category-label">Please select a budget</p>
                                 <FloatingLabel label="Budget">
                                     <Form.Select onChange={e => setBudget(e.target.value)}>
                                         <option>---</option>
@@ -269,36 +448,51 @@ function Survey() {
                                         <option>Above $100</option>
                                     </Form.Select>
                                 </FloatingLabel>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                            <p className="services">Your Email</p>
+                                <p className="email" >Your Email</p>
                                 <Form.Floating>
                                     <Form.Control 
                                     type="text" 
                                     value={email}
-                                    placeholder="Address*"
-                                    onChange={e => setAddress(e.target.value)}
+                                    placeholder="Email*"
+                                    onChange={e => setEmail(e.target.value)}
                                     />
-                                    <label htmlFor="floatingEmail">Email@gmail.com</label>
+                                    <label htmlFor="floatingEmail">Email (ex. test@mail.com)</label>
                                 </Form.Floating>
+                                {emailError ? <p className="error">{emailError}</p> : null}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                            <p className="services-label">Please Verify that you are human</p>
+                                <div className="captcha">
+                                        <ReCAPTCHA
+                                            sitekey="6LdaRTUdAAAAADApRMuDpcyGsWgBTkYjUVPcIJaK"
+                                            onChange={e => setCaptcha(true)}
+                                        />
+                                </div>
+                                {captchaError ? <p className="error">{captchaError}</p> : null}
                             </Col>
                             <Col>
-                            <div className="captcha">
-                                    <ReCAPTCHA
-                                        sitekey="6LdaRTUdAAAAADApRMuDpcyGsWgBTkYjUVPcIJaK"
-                                    />
-                                </div>
+                                <Form.Check
+                                    className="services-label"
+                                    label="I agree to the Terms of Service"
+                                    type="checkbox"
+                                    value="tos"
+                                    onChange={e => setTos(e.target.value)}
+                                />
+                                <a className="TOS" href="https://policies.google.com/terms?hl=en-US">Terms of Service</a>
+                                <br></br>
+                                {tosError ? <p className="error">{tosError}</p> : null}
                             </Col>
                         </Row>
                         
-                        <button onClick={temp}>test</button>
+                        <button onClick={handleSubmit}>Submit</button>
                     </Form>
                 </Container>
-            </div>
-            
+            </div>         
         </div>
+
+        
 
 
     )

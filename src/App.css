@@ -1,5 +1,13 @@
+html{
+  background-color: #1d232e;
+}
+
 .formBody{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  min-height: 100vh;
   background-color: #1d232e;
 }
 
@@ -12,6 +20,8 @@
   display: inline-block;
   flex: auto;
   width: 75%;
+  margin-left:20%;
+  margin-right:20%;
 }
 
 .divHeader{
@@ -39,4 +49,38 @@
 
 .services{
   text-align: left;
+}
+
+.services-label{
+  text-align: left;
+  font-weight: bold;
+}
+
+.category-label{
+  font-weight: bold;
+}
+.email{
+  padding-top: 1rem;
+  font-weight: bold;
+}
+
+.TOS{
+  float:left;
+}
+
+#footer .content p {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.error{
+  color: red;
+  font-style: oblique;
+}
+
+.googleMap{
+  text-align:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
